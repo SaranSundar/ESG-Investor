@@ -51,9 +51,9 @@ class Home extends Component {
 
     clearFields = (name) => {
         if (name === "sector") {
-            this.setState({selectedSectors: []});
+            this.setState({selectedSectors: [], stocks: this.state.allStocks});
         } else if (name === "industry") {
-            this.setState({selectedIndustries: []});
+            this.setState({selectedIndustries: [], stocks: this.state.allStocks});
         }
     };
 
@@ -97,6 +97,30 @@ class Home extends Component {
         });
 
     };
+
+    filterSize = () => {
+        if (this.state.smallMarket && this.state.mediumMarket && this.state.largeMarket) {
+            return this.state.stocks;
+        }
+        let stocks = [];
+        for (let i = 0; i < this.state.stocks.length; i++) {
+            if (this.state.smallMarket && this.state.stocks[i]['marketcap'] <= 2000000000) {
+                stocks.push(this.state.stocks[i]);
+                continue;
+            }
+            if (this.state.mediumMarket && this.state.stocks[i]['marketcap'] >= 2000000000 && this.state.stocks[i]['marketcap'] <= 10000000000) {
+                stocks.push(this.state.stocks[i]);
+                continue;
+            }
+            if (this.state.largeMarket && this.state.stocks[i]['marketcap'] >= 10000000000) {
+                stocks.push(this.state.stocks[i]);
+                continue;
+            }
+
+        }
+        return stocks;
+    };
+
 
     // Nano -  ,Micro - Less then 300M, Small -  300M to 2B, Mid - 2B to 10B, Large - 10B - 200B, Mega - 200B+
 
@@ -161,7 +185,7 @@ class Home extends Component {
                         Clear Sectors
                     </Button>
                 </Grid>
-                <StocksTable data={this.state.stocks} columns={[
+                <StocksTable data={this.filterSize(this.state.stocks)} columns={[
                     {title: 'Company Name', field: 'name'},
                     {title: 'Symbol', field: 'symbol'},
                     {title: 'CEO', field: 'ceo'},
