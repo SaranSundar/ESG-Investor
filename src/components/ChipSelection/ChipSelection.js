@@ -26,7 +26,7 @@ class ChipSelection extends Component {
         };
         return (
             <FormControl style={{width: "500px", display: "flex"}}>
-                <InputLabel id="demo-mutiple-chip-label">{this.props.title}</InputLabel>
+                <InputLabel style={{color: "white"}} id="demo-mutiple-chip-label">{this.props.title}</InputLabel>
                 <Select
                     labelId="demo-mutiple-chip-label"
                     id="demo-mutiple-chip"

@@ -176,28 +176,31 @@ class Home extends Component {
                     <Grid container style={{display: "flex", justifyContent: "center", margin: "20px"}}>
                         <FormGroup row>
                             <FormControlLabel
-                                              control={
-                                                  <Checkbox checked={this.state.smallMarket}
-                                                            onChange={this.handleChange('smallMarket')}
-                                                            value="smallMarket"/>
-                                              }
-                                              label="Small Market Cap"
+                                style={{color: "white", fontStyle: "italic"}}
+                                control={
+                                    <Checkbox checked={this.state.smallMarket}
+                                              onChange={this.handleChange('smallMarket')}
+                                              value="smallMarket"/>
+                                }
+                                label="Small Market Cap"
                             />
                             <FormControlLabel
-                                              control={
-                                                  <Checkbox checked={this.state.mediumMarket}
-                                                            onChange={this.handleChange('mediumMarket')}
-                                                            value="mediumMarket"/>
-                                              }
-                                              label="Medium Market Cap"
+                                style={{color: "white", fontStyle: "italic", fontSize: "20px"}}
+                                control={
+                                    <Checkbox checked={this.state.mediumMarket}
+                                              onChange={this.handleChange('mediumMarket')}
+                                              value="mediumMarket"/>
+                                }
+                                label="Medium Market Cap"
                             />
                             <FormControlLabel
-                                              control={
-                                                  <Checkbox checked={this.state.largeMarket}
-                                                            onChange={this.handleChange('largeMarket')}
-                                                            value="largeMarket"/>
-                                              }
-                                              label="Large Market Cap"
+                                style={{color: "white", fontStyle: "italic"}}
+                                control={
+                                    <Checkbox checked={this.state.largeMarket}
+                                              onChange={this.handleChange('largeMarket')}
+                                              value="largeMarket"/>
+                                }
+                                label="Large Market Cap"
                             />
                         </FormGroup>
                     </Grid>
@@ -214,6 +217,20 @@ class Home extends Component {
                             margin="normal"
                             onChange={(e) => this.setState({peText: e.target.value})}
                             value={this.state.peText}
+                            InputProps={{
+                                style: {
+                                    color: "white",
+                                    fontSize: "20px",
+                                    fontWeight: "bold"
+                                }
+                            }}
+                            InputLabelProps={{
+                                style: {
+                                    color: "white",
+                                    fontSize: "18px",
+                                    fontWeight: "bold"
+                                }
+                            }}
                         />
                         <Button variant="contained" style={{color: "white", background: "#1A76D2"}}
                                 onClick={this.filterPeRatioAndESGScore}>
@@ -221,12 +238,26 @@ class Home extends Component {
                         </Button>
                         <TextField
                             label="ESG Score"
-                            style={{width: "200px", margin: "10px", }}
+                            style={{width: "200px", margin: "10px",}}
 
                             defaultValue="0, 100"
                             margin="normal"
                             onChange={(e) => this.setState({esgText: e.target.value})}
                             value={this.state.esgText}
+                            InputProps={{
+                                style: {
+                                    color: "white",
+                                    fontSize: "20px",
+                                    fontWeight: "bold"
+                                }
+                            }}
+                            InputLabelProps={{
+                                style: {
+                                    color: "white",
+                                    fontSize: "18px",
+                                    fontWeight: "bold"
+                                }
+                            }}
                         />
                         <Button variant="contained" style={{color: "white", background: "#1A76D2"}}
                                 onClick={() => this.clearFields("sector")}>
@@ -240,7 +271,12 @@ class Home extends Component {
                         {title: 'Industry', field: 'industry',},
                         {title: 'Sector', field: 'sector',},
                         {title: 'Exchange', field: 'exchange',},
-                        {title: 'Marketcap', field: 'marketcap', type: 'numeric'},
+                        {
+                            title: 'Marketcap',
+                            field: 'marketcap',
+                            type: 'numeric',
+                            render: rowData => <p>{this.numberWithCommas(rowData.marketcap)}</p>
+                        },
                         {title: 'PE Ratio', field: 'peRatio', type: 'numeric'},
                         {title: 'ESG', field: 'esg', type: 'numeric'},
                         {title: 'C-Ratio', field: 'cRatio', type: 'numeric'},
@@ -249,6 +285,14 @@ class Home extends Component {
             </div>
         );
     }
+
+
+    numberWithCommas = (x) => {
+        if (x === null) {
+            return null;
+        }
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
 }
 
 export default Home;

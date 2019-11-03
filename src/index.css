@@ -8,9 +8,9 @@ body {
 }
 
 body{
-  background: #00d2ff; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to bottom, #00d2ff, #0083b0); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to bottom, #00d2ff, #0083b0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: #5bd7ff; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #5bd7ff, #2f80ed); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #5bd7ff, #2f80ed); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 
 }
