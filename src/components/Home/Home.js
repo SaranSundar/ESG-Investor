@@ -264,23 +264,25 @@ class Home extends Component {
                             Clear Sectors
                         </Button>
                     </Grid>
-                    <StocksTable data={this.filterSize(this.state.stocks)} columns={[
-                        {title: 'Company Name', field: 'name'},
-                        {title: 'Symbol', field: 'symbol'},
-                        {title: 'CEO', field: 'ceo'},
-                        {title: 'Industry', field: 'industry',},
-                        {title: 'Sector', field: 'sector',},
-                        {title: 'Exchange', field: 'exchange',},
-                        {
-                            title: 'Marketcap',
-                            field: 'marketcap',
-                            type: 'numeric',
-                            render: rowData => <p>{this.numberWithCommas(rowData.marketcap)}</p>
-                        },
-                        {title: 'PE Ratio', field: 'peRatio', type: 'numeric'},
-                        {title: 'ESG', field: 'esg', type: 'numeric'},
-                        {title: 'C-Ratio', field: 'cRatio', type: 'numeric'},
-                    ]}/>
+                    <Container style={{position: "absolute", left: "7%"}}>
+                        <StocksTable data={this.filterSize(this.state.stocks)} columns={[
+                            {title: 'Company Name', field: 'name'},
+                            {title: 'Symbol', field: 'symbol'},
+                            {title: 'CEO', field: 'ceo'},
+                            {title: 'Industry', field: 'industry',},
+                            {title: 'Sector', field: 'sector',},
+                            {title: 'Exchange', field: 'exchange',},
+                            {
+                                title: 'Marketcap',
+                                field: 'marketcap',
+                                type: 'numeric',
+                                render: rowData => <p>{this.numberWithCommas(rowData.marketcap)}</p>
+                            },
+                            {title: 'PE Ratio', field: 'peRatio', type: 'numeric'},
+                            {title: 'ESG', field: 'esg', type: 'numeric'},
+                            {title: 'C-Ratio', field: 'cRatio', type: 'numeric'},
+                        ]}/>
+                    </Container>
                 </Container>
             </div>
         );

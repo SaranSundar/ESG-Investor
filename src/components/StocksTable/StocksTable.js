@@ -13,6 +13,7 @@ class StocksTable extends Component {
     render() {
         return (
             <MaterialTable
+                style={{width: "1400px"}}
                 columns={this.props.columns}
                 data={this.props.data}
                 title="Company Search"
@@ -28,7 +29,7 @@ class StocksTable extends Component {
                         backgroundColor: (this.state.selectedRow && this.state.selectedRow.tableData.id === rowData.tableData.id) ? '#EEE' : '#FFF'
                     })
                 }}
-                onRowClick={((evt, selectedRow) => this.setState({ selectedRow }))}
+                onRowClick={((evt, selectedRow) => this.setState({selectedRow}))}
                 // detailPanel={rowData => {
                 //     return (
                 //         <Fragment>
