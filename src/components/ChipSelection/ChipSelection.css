@@ -1,0 +1,9 @@
+.ChipSelection {
+    width: 100%;
+    display: flex !important;
+}
+
+.ChipSelection-Chips{
+    display: flex;
+    flex-wrap: wrap;
+}
