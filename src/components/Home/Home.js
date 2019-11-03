@@ -24,17 +24,22 @@ class Home extends Component {
             smallMarket: true,
             mediumMarket: true,
             largeMarket: true,
+            peText: "-100, 100",
+            esgText: "-100, 100",
         };
     }
+
 
     applyChipFilter = (filters, name) => {
         let fieldName = "industry";
         if (name === "selectedSectors") {
             fieldName = "sector";
         }
-
+        console.log("Filter length is");
+        console.log(filters.length);
         if (filters.length === 0) {
-            this.setState({stocks: this.state.allStocks})
+            this.setState({stocks: this.state.allStocks});
+            return;
         }
         let stocks = [];
         for (let i = 0; i < this.state.allStocks.length; i++) {
@@ -78,6 +83,7 @@ class Home extends Component {
                     'peRatio': docData['key_stats']['peRatio'],
                     'sector': docData['company']['sector'],
                     'esg': Math.floor((Math.random() * 100) + 1),
+                    'cRatio': Math.floor((Math.random() * 100) + 1),
                 };
                 stocks.push(stock);
                 //console.log(docData);
@@ -121,6 +127,32 @@ class Home extends Component {
         return stocks;
     };
 
+    filterPeRatioAndESGScore = () => {
+        let peText = this.state.peText.split(",");
+        if (peText.length !== 2 || isNaN(peText[0]) || isNaN(peText[1])) {
+            alert("Please use 0, 100 format for PE");
+            this.setState({peText: "0, 100"});
+        }
+        let esgText = this.state.esgText.split(",");
+        if (esgText.length !== 2 || isNaN(esgText[0]) || isNaN(esgText[1])) {
+            alert("Please use 0, 100 format for ESG");
+            this.setState({esgText: "0, 100"});
+        }
+        let peResult = [];
+        peResult.push(parseFloat(peText[0]));
+        peResult.push(parseFloat(peText[1]));
+        let esgResult = [];
+        esgResult.push(parseFloat(esgText[0]));
+        esgResult.push(parseFloat(esgText[1]));
+        let stocks = [];
+        for (let i = 0; i < this.state.allStocks.length; i++) {
+            if (this.state.allStocks[i]['peRatio'] >= peResult[0] && this.state.allStocks[i]['peRatio'] <= peResult[1] && this.state.allStocks[i]['esg'] >= esgResult[0] && this.state.allStocks[i]['esg'] <= esgResult[1]) {
+                stocks.push(this.state.allStocks[i]);
+            }
+        }
+        this.setState({stocks: stocks});
+    };
+
 
     // Nano -  ,Micro - Less then 300M, Small -  300M to 2B, Mid - 2B to 10B, Large - 10B - 200B, Mega - 200B+
 
@@ -128,75 +160,93 @@ class Home extends Component {
         this.setState({...this.state, [name]: event.target.checked});
     };
 
+    handleTextChange = (name) => (event) => {
+    };
+
     render() {
         return (
-            <Container className="Home">
-                <Grid container style={{display: "flex", justifyContent: "space-between"}}>
-                    <ChipSelection title="Industries" onChange={this.handleChangeChips} name="selectedIndustries"
-                                   selected={this.state.selectedIndustries} options={this.state.industries}/>
-                    <ChipSelection title="Sectors" onChange={this.handleChangeChips} name="selectedSectors"
-                                   selected={this.state.selectedSectors} options={this.state.sectors}/>
-                </Grid>
-                <Grid container style={{display: "flex", justifyContent: "center", margin: "20px"}}>
-                    <FormGroup row>
-                        <FormControlLabel
-                            control={
-                                <Checkbox checked={this.state.smallMarket} onChange={this.handleChange('smallMarket')}
-                                          value="smallMarket"/>
-                            }
-                            label="Small Market Cap"
+            <div className="Home">
+                <Container>
+                    <Grid container style={{display: "flex", justifyContent: "space-between"}}>
+                        <ChipSelection title="Industries" onChange={this.handleChangeChips} name="selectedIndustries"
+                                       selected={this.state.selectedIndustries} options={this.state.industries}/>
+                        <ChipSelection title="Sectors" onChange={this.handleChangeChips} name="selectedSectors"
+                                       selected={this.state.selectedSectors} options={this.state.sectors}/>
+                    </Grid>
+                    <Grid container style={{display: "flex", justifyContent: "center", margin: "20px"}}>
+                        <FormGroup row>
+                            <FormControlLabel
+                                              control={
+                                                  <Checkbox checked={this.state.smallMarket}
+                                                            onChange={this.handleChange('smallMarket')}
+                                                            value="smallMarket"/>
+                                              }
+                                              label="Small Market Cap"
+                            />
+                            <FormControlLabel
+                                              control={
+                                                  <Checkbox checked={this.state.mediumMarket}
+                                                            onChange={this.handleChange('mediumMarket')}
+                                                            value="mediumMarket"/>
+                                              }
+                                              label="Medium Market Cap"
+                            />
+                            <FormControlLabel
+                                              control={
+                                                  <Checkbox checked={this.state.largeMarket}
+                                                            onChange={this.handleChange('largeMarket')}
+                                                            value="largeMarket"/>
+                                              }
+                                              label="Large Market Cap"
+                            />
+                        </FormGroup>
+                    </Grid>
+                    <Grid container
+                          style={{display: "flex", justifyContent: "space-between", marginBottom: "30px"}}>
+                        <Button onClick={() => this.clearFields("industry")} variant="contained"
+                                style={{color: "white", background: "#1A76D2"}}>
+                            Clear Industries
+                        </Button>
+                        <TextField
+                            label="PE Ratio"
+                            style={{width: "200px", margin: "10px",}}
+                            defaultValue="0, 100"
+                            margin="normal"
+                            onChange={(e) => this.setState({peText: e.target.value})}
+                            value={this.state.peText}
                         />
-                        <FormControlLabel
-                            control={
-                                <Checkbox checked={this.state.mediumMarket} onChange={this.handleChange('mediumMarket')}
-                                          value="mediumMarket"/>
-                            }
-                            label="Medium Market Cap"
+                        <Button variant="contained" style={{color: "white", background: "#1A76D2"}}
+                                onClick={this.filterPeRatioAndESGScore}>
+                            Calculate
+                        </Button>
+                        <TextField
+                            label="ESG Score"
+                            style={{width: "200px", margin: "10px", }}
+
+                            defaultValue="0, 100"
+                            margin="normal"
+                            onChange={(e) => this.setState({esgText: e.target.value})}
+                            value={this.state.esgText}
                         />
-                        <FormControlLabel
-                            control={
-                                <Checkbox checked={this.state.largeMarket} onChange={this.handleChange('largeMarket')}
-                                          value="largeMarket"/>
-                            }
-                            label="Large Market Cap"
-                        />
-                    </FormGroup>
-                </Grid>
-                <Grid container
-                      style={{display: "flex", justifyContent: "space-between", marginBottom: "30px"}}>
-                    <Button onClick={() => this.clearFields("industry")} variant="contained"
-                            style={{color: "white", background: "#1A76D2"}}>
-                        Clear Industries
-                    </Button>
-                    <TextField
-                        label="PE Ratio"
-                        style={{width: "200px", margin: "10px"}}
-                        defaultValue="0, 100"
-                        margin="normal"
-                    />
-                    <TextField
-                        label="ESG Score"
-                        style={{width: "200px", margin: "10px"}}
-                        defaultValue="0, 100"
-                        margin="normal"
-                    />
-                    <Button variant="contained" style={{color: "white", background: "#1A76D2"}}
-                            onClick={() => this.clearFields("sector")}>
-                        Clear Sectors
-                    </Button>
-                </Grid>
-                <StocksTable data={this.filterSize(this.state.stocks)} columns={[
-                    {title: 'Company Name', field: 'name'},
-                    {title: 'Symbol', field: 'symbol'},
-                    {title: 'CEO', field: 'ceo'},
-                    {title: 'Industry', field: 'industry',},
-                    {title: 'Sector', field: 'sector',},
-                    {title: 'Exchange', field: 'exchange',},
-                    {title: 'Marketcap', field: 'marketcap', type: 'numeric'},
-                    {title: 'PE Ratio', field: 'peRatio', type: 'numeric'},
-                    {title: 'ESG', field: 'esg', type: 'numeric'},
-                ]}/>
-            </Container>
+                        <Button variant="contained" style={{color: "white", background: "#1A76D2"}}
+                                onClick={() => this.clearFields("sector")}>
+                            Clear Sectors
+                        </Button>
+                    </Grid>
+                    <StocksTable data={this.filterSize(this.state.stocks)} columns={[
+                        {title: 'Company Name', field: 'name'},
+                        {title: 'Symbol', field: 'symbol'},
+                        {title: 'CEO', field: 'ceo'},
+                        {title: 'Industry', field: 'industry',},
+                        {title: 'Sector', field: 'sector',},
+                        {title: 'Exchange', field: 'exchange',},
+                        {title: 'Marketcap', field: 'marketcap', type: 'numeric'},
+                        {title: 'PE Ratio', field: 'peRatio', type: 'numeric'},
+                        {title: 'ESG', field: 'esg', type: 'numeric'},
+                        {title: 'C-Ratio', field: 'cRatio', type: 'numeric'},
+                    ]}/>
+                </Container>
+            </div>
         );
     }
 }

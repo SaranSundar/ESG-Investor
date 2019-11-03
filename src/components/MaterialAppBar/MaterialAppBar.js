@@ -16,7 +16,7 @@ function MaterialAppBar(props) {
                         ESG Investor
                     </Typography>
                     <nav>
-                        <Link component={RouterLink} variant="button" color="inherit" to="/indexes" className="Link">
+                        <Link component={RouterLink} variant="button" color="inherit" to="/" className="Link">
                             Pull Data
                         </Link>
                     </nav>
