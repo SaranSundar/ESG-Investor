@@ -20,11 +20,30 @@ class Home extends Component {
             selectedIndustries: [],
             selectedSectors: [],
             stocks: [],
+            allStocks: [],
             smallMarket: true,
             mediumMarket: true,
             largeMarket: true,
         };
     }
+
+    applyChipFilter = (filters, name) => {
+        let fieldName = "industry";
+        if (name === "selectedSectors") {
+            fieldName = "sector";
+        }
+
+        if (filters.length === 0) {
+            this.setState({stocks: this.state.allStocks})
+        }
+        let stocks = [];
+        for (let i = 0; i < this.state.allStocks.length; i++) {
+            if (filters.includes(this.state.allStocks[i][fieldName])) {
+                stocks.push(this.state.allStocks[i]);
+            }
+        }
+        this.setState({stocks: stocks});
+    };
 
     componentDidMount() {
         this.readAllStocks();
@@ -68,12 +87,15 @@ class Home extends Component {
             });
             industries = Array.from(industries);
             sectors = Array.from(sectors);
-            this.setState({stocks: stocks, industries: industries, sectors: sectors});
+            this.setState({stocks: stocks, industries: industries, sectors: sectors, allStocks: stocks});
         });
     };
 
     handleChangeChips = (name, event) => {
-        this.setState({[name]: event.target.value});
+        this.setState({[name]: event.target.value}, () => {
+            this.applyChipFilter(event.target.value, name)
+        });
+
     };
 
     // Nano -  ,Micro - Less then 300M, Small -  300M to 2B, Mid - 2B to 10B, Large - 10B - 200B, Mega - 200B+
@@ -86,8 +108,10 @@ class Home extends Component {
         return (
             <Container className="Home">
                 <Grid container style={{display: "flex", justifyContent: "space-between"}}>
-                    <ChipSelection title="Industries" onChange={this.handleChangeChips} name="selectedIndustries" selected={this.state.selectedIndustries} options={this.state.industries}/>
-                    <ChipSelection title="Sectors" onChange={this.handleChangeChips} name="selectedSectors" selected={this.state.selectedSectors} options={this.state.sectors}/>
+                    <ChipSelection title="Industries" onChange={this.handleChangeChips} name="selectedIndustries"
+                                   selected={this.state.selectedIndustries} options={this.state.industries}/>
+                    <ChipSelection title="Sectors" onChange={this.handleChangeChips} name="selectedSectors"
+                                   selected={this.state.selectedSectors} options={this.state.sectors}/>
                 </Grid>
                 <Grid container style={{display: "flex", justifyContent: "center", margin: "20px"}}>
                     <FormGroup row>
